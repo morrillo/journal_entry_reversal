@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <!--   Product Price List -->
+
+        <record id="view_invoice_split" model="ir.ui.view">
+              <field name="name">Journal Entry Reversal</field>
+              <field name="model">account.move.reversal</field>
+              <field name="type">form</field>
+              <field name="arch" type="xml">
+                <form string="Journal Entry Reversal" version="7.0">
+                    <footer>
+                        <button name="entry_reversal" string="Revert"  type="object" class="oe_highlight"  />
+			or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+              </field>
+        </record>
+
+
+
+    <record id="action_account_move_revert" model="ir.actions.act_window">
+        <field name="name">Revert Journal Entry</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="context">{'search_default_journal_id': active_id, 'default_journal_id': active_id}</field>
+        <field name="src_model">account.move</field>
+        <field name="res_model">account.move.reversal</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record model="ir.values" id="action_value_account_move_revert">
+        <!-- field name="model_id" ref="res.partner" /-->
+        <field name="name">Revert Journal Entry</field>
+        <field name="key2">client_action_multi</field>
+        <field name="value" eval="'ir.actions.act_window,' +str(ref('action_account_move_revert'))" />
+        <field name="key">action</field>
+        <field name="model">account.move</field>
+    </record>
+
+</data>
+</openerp>
