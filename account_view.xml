@@ -10,6 +10,9 @@
               <field name="type">form</field>
               <field name="arch" type="xml">
                 <form string="Journal Entry Reversal" version="7.0">
+		    <group string="Journal Entry Reversal">
+			<field name="post_entry" />
+		    </group>
                     <footer>
                         <button name="entry_reversal" string="Revert"  type="object" class="oe_highlight"  />
 			or

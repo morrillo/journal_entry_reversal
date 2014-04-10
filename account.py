@@ -36,6 +36,9 @@ class account_move_reversal(osv.osv_memory):
 		return {'type': 'ir.actions.act_window_close'}
 	move_obj = self.pool.get('account.move')
 	move_line_obj = self.pool.get('account.move.line')
+        res = self.read(cr,uid,ids,['post_entry'])
+        post_entry = res[0]['post_entry']
+
 	for move in move_obj.browse(cr,uid,move_ids):
 		if move.state == 'posted':
 			vals_move = {
@@ -79,7 +82,18 @@ class account_move_reversal(osv.osv_memory):
 					'tax_code_id': line.tax_code_id.id,
 					}
 				line_id = move_line_obj.create(cr,uid,vals_line)
+		if post_entry:
+			return_id = move_obj.button_validate(cr,uid,[move_id])
+
         return {}
+
+    _columns = {
+		'post_entry': fields.boolean('Post Entries Automatically')
+		}
+
+    _defaults = {
+		'post_entry': False,
+		}
 
 account_move_reversal()
 
