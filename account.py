@@ -36,8 +36,10 @@ class account_move_reversal(osv.osv_memory):
 		return {'type': 'ir.actions.act_window_close'}
 	move_obj = self.pool.get('account.move')
 	move_line_obj = self.pool.get('account.move.line')
-        res = self.read(cr,uid,ids,['post_entry'])
+        res = self.read(cr,uid,ids,['post_entry','journal_id','period_id'])
         post_entry = res[0]['post_entry']
+        journal_id = res[0]['journal_id']
+        period_id = res[0]['period_id']
 
 	for move in move_obj.browse(cr,uid,move_ids):
 		if move.state == 'posted':
@@ -45,7 +47,9 @@ class account_move_reversal(osv.osv_memory):
 				'partner_id': move.partner_id.id,
 				'company_id': move.company_id.id,
 				'date': str(date.today()),
-				'journal_id': move.journal_id.id,
+				# 'journal_id': move.journal_id.id,
+				'journal_id': journal_id[0],
+				'period_id': period_id[0],
 				'name': 'REVERSAL ' + move.name,
 				'narration': move.narration,
 				'ref': move.ref,
@@ -88,6 +92,8 @@ class account_move_reversal(osv.osv_memory):
         return {}
 
     _columns = {
+		'journal_id': fields.many2one('account.journal','Journal'),
+		'period_id': fields.many2one('account.period','Period'),
 		'post_entry': fields.boolean('Post Entries Automatically')
 		}
 
